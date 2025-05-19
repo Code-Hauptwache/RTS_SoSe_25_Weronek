@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zakaria Boujana - Nassi-Shneiderman Diagram for Execution Timing Program</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .diagram {
+            border: 2px solid #333;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .box {
+            padding: 8px;
+            border-bottom: 1px solid #333;
+            background-color: #f9f9f9;
+        }
+        .box-last {
+            border-bottom: none;
+        }
+        .if-container {
+            display: flex;
+            border-bottom: 1px solid #333;
+        }
+        .if-condition {
+            flex: 1;
+            padding: 8px;
+            background-color: #e6f7ff;
+            border-right: 1px solid #333;
+        }
+        .else-condition {
+            flex: 1;
+            padding: 8px;
+            background-color: #fff0f0;
+        }
+        .loop-container {
+            border-bottom: 1px solid #333;
+            padding: 8px;
+            background-color: #f0f8ff;
+        }
+        .loop-body {
+            margin-left: 20px;
+            border-left: 1px solid #666;
+            padding-left: 10px;
+        }
+        .function-header {
+            background-color: #e6ffe6;
+            font-weight: bold;
+            padding: 8px;
+            border-bottom: 1px solid #333;
+        }
+        pre {
+            margin: 0;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Zakaria Boujana - Nassi-Shneiderman Diagram for Execution Timing Program</h1>
+    
+    <h2>Main Program</h2>
+    <div class="diagram">
+        <div class="function-header">int main(int argc, char **argv)</div>
+        <div class="box">Declare variables: i, randomValue, t_Start, t_Compl, dt_exec</div>
+        <div class="box">int probability = 30</div>
+        <div class="if-container">
+            <div class="if-condition">
+                <strong>if(argc > 1)</strong><br>
+                probability = atoi(argv[1])
+            </div>
+            <div class="else-condition">
+                <strong>else</strong><br>
+                (use default probability of 30)
+            </div>
+        </div>
+        <div class="box">Print probability values</div>
+        <div class="box">clock_gettime(CLOCK_REALTIME, &t_Start)</div>
+        <div class="loop-container">
+            <strong>for (i = 0; i < 500,000; i++)</strong>
+            <div class="loop-body">
+                <div class="box" style="border: none;">randomValue = rand()</div>
+                <div class="if-container" style="border: none;">
+                    <div class="if-condition">
+                        <strong>if (randomValue % 100 < probability)</strong><br>
+                        myfunc1(randomValue)
+                    </div>
+                    <div class="else-condition">
+                        <strong>else</strong><br>
+                        myfunc2(randomValue-1234)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box">clock_gettime(CLOCK_REALTIME, &t_Compl)</div>
+        <div class="box">dt_exec = diff_time(&t_Start, &t_Compl)</div>
+        <div class="box">Print results (start time, completion time, execution time)</div>
+        <div class="box box-last">return 0</div>
+    </div>
+
+    <h2>diff_time Function</h2>
+    <div class="diagram">
+        <div class="function-header">struct timespec diff_time(struct timespec *t_Start, struct timespec *t_Compl)</div>
+        <div class="box">Declare struct timespec dt</div>
+        <div class="if-container">
+            <div class="if-condition">
+                <strong>if (t_Compl->tv_nsec < t_Start->tv_nsec)</strong><br>
+                dt.tv_sec = t_Compl->tv_sec - t_Start->tv_sec - 1<br><br>
+                dt.tv_nsec = t_Compl->tv_nsec + 1000000000 - t_Start->tv_nsec
+            </div>
+            <div class="else-condition">
+                <strong>else</strong><br>
+                dt.tv_sec = t_Compl->tv_sec - t_Start->tv_sec<br><br>
+                dt.tv_nsec = t_Compl->tv_nsec - t_Start->tv_nsec
+            </div>
+        </div>
+        <div class="box box-last">return dt</div>
+    </div>
+
+    <h2>Function Descriptions</h2>
+    
+    <h3>myfunc1 (simple function)</h3>
+    <div class="diagram">
+        <div class="function-header">int myfunc1(int in)</div>
+        <div class="box">Declare variables i, j = in</div>
+        <div class="loop-container">
+            <strong>for(i=0; i <= 999; i++)</strong>
+            <div class="loop-body">
+                j = j + i
+            </div>
+        </div>
+        <div class="box box-last">return j</div>
+    </div>
+
+    <h3>myfunc2 (complex function)</h3>
+    <div class="diagram">
+        <div class="function-header">int myfunc2(int in)</div>
+        <div class="box">Declare variables val1, i, val2, val3</div>
+        <div class="loop-container">
+            <strong>for(i=0; i < 4500; i++)</strong>
+            <div class="loop-body">
+                val1 = in*in*i<br>
+                val2 = (in+i)*(in+i)*(in+i)<br>
+                val3 = val2 / val1
+            </div>
+        </div>
+        <div class="box box-last">return val3</div>
+    </div>
+
+    </body>
+</html>
