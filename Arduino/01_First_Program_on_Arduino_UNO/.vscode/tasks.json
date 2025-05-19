@@ -1,0 +1,49 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Arduino CLI: Verify",
+            "type": "shell",
+            "command": "${workspaceFolder}/../../arduino-cli/arduino-cli.exe",
+            "args": [
+                "compile",
+                "--fqbn",
+                "arduino:avr:uno",
+                "${file}"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Arduino CLI: Upload",
+            "type": "shell",
+            "command": "${workspaceFolder}/../../arduino-cli/arduino-cli.exe",
+            "args": [
+                "upload",
+                "-p",
+                "COM3",
+                "--fqbn",
+                "arduino:avr:uno",
+                "${file}"
+            ],
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "label": "Arduino CLI: Monitor",
+            "type": "shell",
+            "command": "${workspaceFolder}/../../arduino-cli/arduino-cli.exe",
+            "args": [
+                "monitor",
+                "-p",
+                "COM3",
+                "-c",
+                "baudrate=9600"
+            ],
+            "problemMatcher": []
+        }
+    ]
+}

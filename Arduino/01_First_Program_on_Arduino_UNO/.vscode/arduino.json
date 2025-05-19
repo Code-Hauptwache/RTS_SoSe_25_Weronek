@@ -1,0 +1,9 @@
+{
+    "sketch": "01_First_Program_on_Arduino_UNO.ino",
+    "board": "arduino:avr:uno",
+    "port": "COM3",
+    "programmers": [
+        "avrispmkii"
+    ],
+    "output": "build"
+}
