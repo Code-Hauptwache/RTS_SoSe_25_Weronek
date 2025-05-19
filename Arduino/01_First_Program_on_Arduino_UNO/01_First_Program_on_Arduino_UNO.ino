@@ -22,7 +22,7 @@ void setup() {
 
 void loop() {
   // Pattern 1: Sequential blinking (one after another)
-  sequentialBlink(300);  // 300ms delay between actions
+  sequentialBlink(200);
 }
 
 // Function for sequential blinking
