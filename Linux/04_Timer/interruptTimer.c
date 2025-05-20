@@ -4,12 +4,12 @@
 #include <sys/time.h>
 #include <sys/timerfd.h>
 
-#define DT_PERIOD_S        1L // this is the period (time difference) between two cyclic interrupts
-#define DT_PERIOD_US       0L // this is the period (time difference) between two cyclic interrupts
-#define DT_WAIT_S          2L // this is the time to wait until the first interrupt (in sec=
-#define DT_WAIT_US         0L // this is the time to wait until the first interrupt (in us <1000000)
+#define DT_PERIOD_S        0L // this is the period (time difference) between two cyclic interrupts
+#define DT_PERIOD_US  100000L // this is the period (time difference) between two cyclic interrupts
+#define DT_WAIT_S          0L // this is the time to wait until the first interrupt (in sec=
+#define DT_WAIT_US    500000L // this is the time to wait until the first interrupt (in us <1000000)
 
-#define NUM_SLICES        10  // this defines the amount of interrupts
+#define NUM_SLICES       100  // this defines the amount of interrupts 
  
 // ********************************** MAIN ************************************************************** 
 int main(void) 
@@ -40,15 +40,16 @@ int main(void)
   itval.it_value.tv_usec    = DT_WAIT_US;       // micro seconds to wait after first start of timer
   
   // define the alarm by specifying the alarm type and the ISR
-  // signal (SIGALRM, interrupt_service_routine);  // commented out as it's deprecated
+  // signal (SIGALRM, interrupt_service_routine);
   
-  // Using sigaction instead (modern approach)
+  // comment out the line above with signal and uncomment the following lines for sigaction
   struct sigaction mysigaction;                         // initiate my sigaction as my sigactionset
   sigemptyset(&mysigaction.sa_mask);                    // clear mysigactionset
   mysigaction.sa_handler = interrupt_service_routine;   // fill my ISF into mysigactionset
   mysigaction.sa_flags = SA_RESTART;                    // set the SA_RESTART-flag in mysiagaction
 
   sigaction (SIGALRM, &mysigaction, NULL);              // activate my sigaction set
+  
   
   // init and start the timer
   ret = setitimer (ITIMER_REAL, &itval, NULL);
