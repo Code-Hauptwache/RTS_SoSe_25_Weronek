@@ -1,2 +1,6 @@
 /.vscode
 *.exe
+
+# Ignore all Linux executables without extension
+*/*/[^.]*
+
