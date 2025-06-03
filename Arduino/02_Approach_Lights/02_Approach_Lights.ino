@@ -31,7 +31,7 @@ void setup() {
   // Initialize all LED pins as outputs
   for (int i = 0; i < NUM_LEDS; i++) {
     pinMode(LED_PINS[i], OUTPUT);
-    digitalWrite(LED_PINS[i], LOW);  // Ensure all LEDs are initially off
+    digitalWrite(LED_PINS[i], HIGH);  // Ensure all LEDs are initially off
   }
   
   // Initialize button pin as input with internal pull-up resistor
@@ -49,39 +49,23 @@ void loop() {
 }
 
 void checkButton() {
-  // Read the current state of the button
-  bool buttonState = digitalRead(BUTTON_PIN);
-  
-  // Check if the button state has changed
-  if (buttonState != lastButtonState) {
-    // Reset the debounce timer
-    lastDebounceTime = millis();
+  while (digitalRead(BUTTON_PIN) == LOW)
+  {
+
   }
-  
-  // Check if enough time has passed since the last state change
-  if ((millis() - lastDebounceTime) > debounceDelay) {
-    // If the button state has changed and is LOW (pressed)
-    if (buttonState == LOW && lastButtonState == HIGH) {
-      // Toggle pause state
-      isPaused = !isPaused;
-    }
-  }
-  
-  // Save the current button state for comparison next time
-  lastButtonState = buttonState;
 }
 
 void runApproachLightsSequence() {
   // Run through each LED in sequence
   for (int i = 0; i < NUM_LEDS; i++) {
     // Turn on current LED
-    digitalWrite(LED_PINS[i], HIGH);
+    digitalWrite(LED_PINS[i], LOW);
     
     // Keep LED on for the light-on duration
     delay(LIGHT_ON_DURATION);
     
     // Turn off current LED
-    digitalWrite(LED_PINS[i], LOW);
+    digitalWrite(LED_PINS[i], HIGH);
     
     // Wait for the step duration before moving to the next LED
     // but check if button was pressed during this time
