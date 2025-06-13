@@ -17,7 +17,7 @@ int main(int argc, char *args[]){
 	// first let's make sure, the number of arguments is acceptable.
 	// your program should be called with four arguments.
 	// Let's check the number of arguments. 
-	if ( _ ){
+	if ( argc < 4 || argc > 5){
        	printf("usage: %s $LABEL, $NUM_SLICES, $PRIO, $LOAD", argv[0])
 		return -1 ;
 	}
@@ -25,11 +25,11 @@ int main(int argc, char *args[]){
 	// use variables to store the arguments and make the code readable. 
 	// Hint: int atoi(char *) https://linux.die.net/man/3/atoi
 	// Hint: int atol(char *) https://linux.die.net/man/3/atol
-	char *programName 	= _ ;
-	char *label 		= _ ;
-	int  num_slices 	= _ ;
-	int  prio 			= _ ;
-	long load 			= _ ; // for large numbers long must be used instead of int
+	char *programName 	= args[0] ;
+	char *label 		= args[1] ;
+	int  num_slices 	= atoi(args[2]) ;
+	int  prio 			= atoi(args[3]) ;
+	long load 			= (argc == 5) ? args[4] : 1000000000L; // for large numbers long must be used instead of int
 	
 	
 	// Set the priority of this process to what was given as argument. 
@@ -52,9 +52,9 @@ int main(int argc, char *args[]){
 	struct timespec tP0;
 	clock_gettime(CLOCK_REALTIME, &tP0);
 	// Now print the output as requested in the exercise.
-	printf("%s %s %3d %10ld 9ld\n", 
-		_ , 
-		_ ,
+	printf("%s %s %3d %10ld %9ld\n", 
+		programName, 
+		label,
 		0,
 		tP0.tv_sec,
 		tP0.tv_nsec,
