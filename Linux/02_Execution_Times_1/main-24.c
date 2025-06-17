@@ -19,9 +19,16 @@ struct timespec diff_time(struct timespec *t_Start, struct timespec *t_Compl) {
 	// the accuracy has to be nanoseconds
 	// note: it is not complicated but not as simple as in the line above
 
-	?????
+	struct timespec dt;
+    dt.tv_sec = t_Compl->tv_sec - t_Start->tv_sec;
+    dt.tv_nsec = t_Compl->tv_nsec - t_Start->tv_nsec;
+    if (dt.tv_nsec < 0) {
+        dt.tv_sec--;
+        dt.tv_nsec += 1000000000L;
+    }
 
-	return dt
+
+	return dt;
 }
 
 //  Do not change the function myfunc1 !
@@ -58,28 +65,32 @@ int main ( int argc , char ** argv ){
 	struct timespec dt_exec; 
 
     // handle probability argument argv
-	?????
+	int prob_myfunc1 = atoi(argv[1]);
+    printf("myfunc1 probability: %d\n", prob_myfunc1);
+    printf("myfunc2 probability: %d\n", 100 - prob_myfunc1);
+
 
     // get the time stamp for the start time t_Start
-	t_Start = ??????
+	clock_gettime(CLOCK_MONOTONIC, &t_Start);
 
     for (i = 0; i < 5e5; i++){ //  e stands for exponent. 5e5 = 5 * 10^5 = 500000
         randomValue = rand();
-        if (???)
+        if ((randomValue % 100) < prob_myfunc1)
             myfunc1(randomValue);
         else
             myfunc2(randomValue-1234);
     }
 
     // get the time stamp for the completion time t_Compl
-	t_Compl = ?????
+	clock_gettime(CLOCK_MONOTONIC, &t_Compl);
 
 	// calculate the execution time dt_exec
     dt_exec = diff_time(&t_Start, &t_Compl);
 
 	// print the results
-    printf("Start-time      : %11ld s %9ld ns", t_Start.tv_sec,t_Start.tv_nsec);
-    printf("Completion-time : %11ld s %9ld ns", t_Compl.tv_sec,t_Compl.tv_nsec);
-    printf("Execution-time  : %11ld s %9ld ns", dt_exec.tv_sec,dt_exec.tv_nsec);
+    printf("Start-time      : %11ld s %9ld ns\n", t_Start.tv_sec,t_Start.tv_nsec);
+    printf("Completion-time : %11ld s %9ld ns\n", t_Compl.tv_sec,t_Compl.tv_nsec);
+    printf("Execution-time  : %11ld s %9ld ns\n", dt_exec.tv_sec,dt_exec.tv_nsec);
+
     return 0;
 }
