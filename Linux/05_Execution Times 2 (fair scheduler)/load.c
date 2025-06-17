@@ -17,7 +17,7 @@ int main(int argc, char *args[]){
 	// your program should be called with four arguments.
 	// Let's check the number of arguments. 
 	if ( argc < 4 || argc > 5){
-       	printf("usage: %s $LABEL, $NUM_SLICES, $PRIO, $LOAD", argv[0])
+       	printf("usage: %s $LABEL, $NUM_SLICES, $PRIO, $LOAD", args[0]);
 		return -1 ;
 	}
 	
@@ -56,7 +56,7 @@ int main(int argc, char *args[]){
 		label,
 		0,
 		tP0.tv_sec,
-		tP0.tv_nsec,
+		tP0.tv_nsec
 		);
 
 	// create variable for the Completion Time
@@ -72,7 +72,7 @@ int main(int argc, char *args[]){
 		// get the Completion Time
 		clock_gettime(CLOCK_REALTIME, &tPC);
 		// Now print the output as requested in the exercise.
-		printf("%s %s %4d %10ld 9ld\n", 
+		printf("%s %s %4d %10ld %9ld\n", 
 			programName , 
 			label ,
 			slice ,
