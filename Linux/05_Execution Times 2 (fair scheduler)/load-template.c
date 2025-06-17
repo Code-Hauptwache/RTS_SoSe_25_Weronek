@@ -3,7 +3,6 @@
 #include<stdlib.h> 			// atoi, atol
 #include<unistd.h> 			// getpid
 #include<sys/resource.h> 	// setPriority, PRIO_PROCESS
-}
 
 /*
  This program generates a specified amount of load on the CPU depending on the arguments it was given.
@@ -29,7 +28,7 @@ int main(int argc, char *args[]){
 	char *label 		= args[1] ;
 	int  num_slices 	= atoi(args[2]) ;
 	int  prio 			= atoi(args[3]) ;
-	long load 			= (argc == 5) ? args[4] : 1000000000L; // for large numbers long must be used instead of int
+	long load 			= (argc == 5) ? atol(args[4]) : 1000000000L; // for large numbers long must be used instead of int
 	
 	
 	// Set the priority of this process to what was given as argument. 
@@ -61,22 +60,22 @@ int main(int argc, char *args[]){
 		);
 
 	// create variable for the Completion Time
-		_ _ tPC;	
+		struct timespec tPC;	
 
 	// (outer)loop for slices
-	for (int slice = 1; slice <= _ ; slice++){
+	for (int slice = 1; slice <= num_slices ; slice++){
 		// (inner)loop for iterations of single slice. This (inner)loop will take one second each time to process.
-		long dummy
-		for (int iteration = 0; iteration < _ ; iteration++){
+		long dummy = 0;
+		for (int iteration = 0; iteration < load; iteration++){
 			dummy = dummy + 1;  // just to calculate someting and generate load
 		}
 		// get the Completion Time
 		clock_gettime(CLOCK_REALTIME, &tPC);
 		// Now print the output as requested in the exercise.
 		printf("%s %s %4d %10ld 9ld\n", 
-			_ , 
-			_ ,
-			_ ,
+			programName , 
+			label ,
+			slice ,
 			tPC.tv_sec,
 			tPC.tv_nsec
 			);
