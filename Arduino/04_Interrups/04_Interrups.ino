@@ -1,3 +1,4 @@
+// Zakria Boujana - Interrupts
 #include <Arduino.h>
 
 // Define LED pins
@@ -13,77 +14,78 @@ const int LED8 = 12;
 // Define button pin
 const int BUTTON_PIN = 2;
 
-// Store LED pins in an array for easier access
 const int LED_PINS[] = {LED1, LED2, LED3, LED4, LED5, LED6, LED7, LED8};
 const int NUM_LEDS = 8;
 
-// Timing constants
-const unsigned long LIGHT_ON_DURATION = 2;  // 2ms light-on phase
-const unsigned long STEP_DURATION = 60;  // 60.5ms rounded to 60ms for simplicity
-
-// State variables
-bool isPaused = false;
-// bool lastButtonState = HIGH;  // Using pull-up resistor, so HIGH is not pressed
-// unsigned long lastDebounceTime = 0;
-// unsigned long debounceDelay = 50;  // 50ms debounce time
+volatile bool runningMode = true;
+volatile unsigned long lastButtonPress = 0;
+volatile bool modeChanged = false;
 
 void setup() {
-  // Initialize all LED pins as outputs
+  Serial.begin(9600);
+  Serial.println("System started - Running mode");
+  
   for (int i = 0; i < NUM_LEDS; i++) {
     pinMode(LED_PINS[i], OUTPUT);
-    digitalWrite(LED_PINS[i], HIGH);  // Ensure all LEDs are initially off
+    digitalWrite(LED_PINS[i], HIGH);
   }
-  
-  // Initialize button pin as input with internal pull-up resistor
+
   pinMode(BUTTON_PIN, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(BUTTON_PIN), buttonISR, FALLING);
 }
 
 void loop() {
-  // Check button state for pause functionality
-  checkButton();
-  
-  // If not paused, run the approach lights sequence
-  if (!isPaused) {
-    runApproachLightsSequence();
-  }
-}
-
-void checkButton() {
-  while (digitalRead(BUTTON_PIN) == LOW)
-  {
-
-  }
-}
-
-void runApproachLightsSequence() {
-  // Run through each LED in sequence
   for (int i = 0; i < NUM_LEDS; i++) {
-    // Turn on current LED
-    digitalWrite(LED_PINS[i], LOW);
-    
-    // Keep LED on for the light-on duration
-    delay(LIGHT_ON_DURATION);
-    
-    // Turn off current LED
+    pinMode(LED_PINS[i], OUTPUT);
     digitalWrite(LED_PINS[i], HIGH);
-    
-    // Wait for the step duration before moving to the next LED
-    // but check if button was pressed during this time
-    unsigned long startWaitTime = millis();
-    while (millis() - startWaitTime < STEP_DURATION) {
-      checkButton();
-      if (isPaused) {
-        return;  // Exit the function if paused
+  }
+
+  if (modeChanged) {
+    if (runningMode) {
+      Serial.println("running ...");
+    } else {
+      Serial.println("idle ...");
+    }
+    modeChanged = false;
+  }
+  
+  if (runningMode) {
+    for (int i = 0; i < NUM_LEDS; i++) {
+      if (!runningMode) break;
+      
+      digitalWrite(LED_PINS[i], LOW);
+      for (int j = 0; j < 2; j++) {
+        if (!runningMode) break;
+        delay(1);
+      }
+      digitalWrite(LED_PINS[i], HIGH);
+      for (int j = 0; j < 60; j++) {
+        if (!runningMode) break;
+        delay(1);
       }
     }
-  }
-  
-  // Wait one more step duration after the last LED
-  unsigned long startWaitTime = millis();
-  while (millis() - startWaitTime < STEP_DURATION) {
-    checkButton();
-    if (isPaused) {
-      return;  // Exit the function if paused
+    for (int j = 0; j < 60; j++) {
+      if (!runningMode) break;
+      delay(1);
     }
+  }
+  else {
+    digitalWrite(LED_PINS[0], LOW);
+    digitalWrite(LED_PINS[NUM_LEDS - 1], LOW);
+    for (int i = 1; i < NUM_LEDS - 1; i++) {
+      digitalWrite(LED_PINS[i], HIGH);
+    }
+    delay(10);
+  }
+}
+
+void buttonISR() {
+  unsigned long currentTime = millis();
+  
+  // Debounce - only accept button press if 200ms passed
+  if (currentTime - lastButtonPress > 200) {
+    runningMode = !runningMode;
+    modeChanged = true;
+    lastButtonPress = currentTime;
   }
 }
