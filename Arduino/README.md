@@ -62,19 +62,19 @@ cd Arduino/04_Interrups
 
 ```powershell
 # Check if Arduino CLI is working
-.\arduino-cli-extracted\arduino-cli.exe version
+.\arduino-cli\arduino-cli.exe version
 
 # Find your Arduino
-.\arduino-cli-extracted\arduino-cli.exe board list
+.\arduino-cli\arduino-cli.exe board list
 
 # Compile only
-.\arduino-cli-extracted\arduino-cli.exe compile --fqbn arduino:avr:uno your_sketch.ino
+.\arduino-cli\arduino-cli.exe compile --fqbn arduino:avr:uno your_sketch.ino
 
 # Upload only (after compiling)
-.\arduino-cli-extracted\arduino-cli.exe upload -p YOUR_PORT --fqbn arduino:avr:uno your_sketch.ino
+.\arduino-cli\arduino-cli.exe upload -p YOUR_PORT --fqbn arduino:avr:uno your_sketch.ino
 
 # Compile and upload together
-.\arduino-cli-extracted\arduino-cli.exe compile --upload -p YOUR_PORT --fqbn arduino:avr:uno your_sketch.ino
+.\arduino-cli\arduino-cli.exe compile --upload -p YOUR_PORT --fqbn arduino:avr:uno your_sketch.ino
 ```
 
 ## Common Issues
