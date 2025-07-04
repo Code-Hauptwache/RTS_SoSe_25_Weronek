@@ -125,6 +125,7 @@ void runButtonISR() {
     lastMode = currentMode;
     currentMode = RUN;
     lastButtonPress = currentTime;
+    Serial.println("Run mode activated");
   }
 }
 
@@ -136,5 +137,6 @@ void configButtonISR() {
     lastMode = currentMode;
     currentMode = CONFIG;
     lastButtonPress = currentTime;
+    Serial.println("Config mode activated");
   }
 }
